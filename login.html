@@ -1,9 +1,48 @@
+<!--
+  login.html
+  ==========
+  A modern, responsive login page built with pure HTML, CSS, and vanilla JavaScript.
+
+  Features:
+    - Glassmorphism-style login card with a smooth fade-in animation.
+    - Email and password fields with inline SVG icons.
+    - Toggle button to show/hide the password.
+    - "Remember me" checkbox and "Forgot password?" link.
+    - Client-side form validation (empty fields, email format, password length).
+    - Simulated async login with a loading spinner (1.4 s delay).
+    - Inline success and error feedback messages.
+    - "Sign up" prompt at the bottom.
+
+  NOTE: Credentials are hard-coded for demonstration purposes only.
+        Replace VALID_EMAIL and VALID_PASS with a real backend call before
+        using this in any production environment.
+
+  Author:  Jay Gohil
+  Version: 1.0
+-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- Character encoding and responsive viewport -->
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Login</title>
+
+  <!-- =====================================================================
+       STYLES
+       Scoped entirely to this file (no external stylesheet dependency).
+       Key sections:
+         1. CSS Reset & body layout (full-viewport centered flexbox)
+         2. .login-card  - glassmorphism card container
+         3. Animations   - fadeUp (card entrance), spin (button spinner)
+         4. Form elements - labels, inputs, placeholder, focus states
+         5. .toggle-pwd  - show/hide password button
+         6. .options-row - "Remember me" + "Forgot password?" row
+         7. .btn         - gradient submit button with loading state
+         8. .msg         - error / success inline feedback banners
+         9. .divider     - horizontal "or" separator
+        10. .signup      - "Create account" footer link
+       ===================================================================== -->
   <style>
     * { margin:0; padding:0; box-sizing:border-box; }
     body {
@@ -54,7 +93,27 @@
 </head>
 <body>
 
+<!-- =========================================================================
+     LOGIN CARD
+     Central glassmorphism container that holds the entire login UI.
+     Structure:
+       .login-card
+         ├── .logo          - branded SVG icon (gradient "A" lettermark)
+         ├── h1             - page heading ("Welcome Back")
+         ├── .subtitle      - supporting tagline
+         ├── #errMsg        - error feedback banner (hidden by default)
+         ├── #okMsg         - success feedback banner (hidden by default)
+         ├── form#loginForm
+         │     ├── .form-group  Email field (with envelope SVG icon)
+         │     ├── .form-group  Password field (with lock SVG icon + eye toggle)
+         │     ├── .options-row "Remember me" checkbox + "Forgot password?" link
+         │     └── button#loginBtn  Submit button (with loading spinner)
+         ├── .divider       - "or" separator
+         └── .signup        - "Don't have an account? Create one" link
+     ========================================================================= -->
 <div class="login-card">
+
+  <!-- Brand logo: SVG gradient circle with an "A"-style lettermark -->
   <div class="logo">
     <svg viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
       <circle cx="26" cy="26" r="26" fill="url(#g)"/>
@@ -65,9 +124,15 @@
   </div>
   <h1>Welcome Back</h1>
   <p class="subtitle">Sign in to your account to continue</p>
-  <div class="msg error" id="errMsg"></div>
-  <div class="msg success" id="okMsg"></div>
+
+  <!-- Feedback banners: shown/hidden dynamically by JavaScript -->
+  <div class="msg error" id="errMsg"></div>   <!-- Error message container  -->
+  <div class="msg success" id="okMsg"></div>  <!-- Success message container -->
+
+  <!-- Login form; novalidate disables native browser validation so JS handles it -->
   <form id="loginForm" novalidate>
+
+    <!-- ── Email field ── -->
     <div class="form-group">
       <label for="email">Email Address</label>
       <div class="input-wrapper">
@@ -75,33 +140,62 @@
         <input type="email" id="email" placeholder="you@example.com" autocomplete="email"/>
       </div>
     </div>
+    <!-- ── Password field ── -->
     <div class="form-group">
       <label for="password">Password</label>
       <div class="input-wrapper">
         <svg class="ico" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
         <input type="password" id="password" placeholder="Enter your password" autocomplete="current-password"/>
+        <!-- Eye icon button: toggles password field between type="password" and type="text" -->
         <button type="button" class="toggle-pwd" id="togglePwd" aria-label="Toggle password">
           <svg id="eyeShow" xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
           <svg id="eyeHide" xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8" style="display:none"><path stroke-linecap="round" stroke-linejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.477 0-8.268-2.943-9.542-7a9.97 9.97 0 012.378-4.144M6.31 6.31A9.953 9.953 0 0112 5c4.477 0 8.268 2.943 9.542 7a9.97 9.97 0 01-1.397 2.617M6.31 6.31L3 3m3.31 3.31l11.38 11.38M9.88 9.88a3 3 0 004.243 4.243M9.88 9.88L17.12 17.12"/></svg>
         </button>
       </div>
     </div>
+    <!-- ── Remember me + Forgot password row ── -->
     <div class="options-row">
+      <!-- Checkbox to persist session (UI only — not wired to backend in this demo) -->
       <label class="remember"><input type="checkbox" id="remember"/> Remember me</label>
+      <!-- Password-reset link (placeholder href — wire to reset flow in production) -->
       <a href="#" class="forgot">Forgot password?</a>
     </div>
+
+    <!-- Submit button: shows a CSS spinner while the login request is in-flight -->
     <button type="submit" class="btn" id="loginBtn">
-      <span class="btn-text">Sign In</span>
-      <div class="spinner"></div>
+      <span class="btn-text">Sign In</span>   <!-- Normal label text         -->
+      <div class="spinner"></div>             <!-- Animated spinner (hidden) -->
     </button>
   </form>
+
+  <!-- "or" divider between the form and the sign-up prompt -->
   <div class="divider">or</div>
+
+  <!-- Sign-up prompt for users who do not yet have an account -->
   <div class="signup">Don't have an account? <a href="#">Create one</a></div>
 </div>
 
 <script>
+  // =========================================================================
+  // JAVASCRIPT — Login page logic
+  //
+  // Responsibilities:
+  //   1. Password visibility toggle (show/hide password field).
+  //   2. Client-side form validation before submission.
+  //   3. Simulated async login with a loading spinner.
+  //   4. Display inline success or error feedback messages.
+  //   5. Clear feedback messages as the user edits inputs.
+  //
+  // NOTE: VALID_EMAIL and VALID_PASS are demo credentials hard-coded here.
+  //       In production, replace the setTimeout block with a real fetch/XHR
+  //       call to your authentication API.
+  // =========================================================================
+
+  // ── Demo credentials (replace with a real API call in production) ──
   const VALID_EMAIL = 'user@example.com';
   const VALID_PASS  = 'password123';
+
+  // ── DOM element references ──
   const form      = document.getElementById('loginForm');
   const emailEl   = document.getElementById('email');
   const pwdEl     = document.getElementById('password');
@@ -109,40 +203,67 @@
   const errMsg    = document.getElementById('errMsg');
   const okMsg     = document.getElementById('okMsg');
   const toggleBtn = document.getElementById('togglePwd');
-  const eyeShow   = document.getElementById('eyeShow');
-  const eyeHide   = document.getElementById('eyeHide');
+  const eyeShow   = document.getElementById('eyeShow');  // "eye open"  SVG icon
+  const eyeHide   = document.getElementById('eyeHide');  // "eye closed" SVG icon
 
+  // ── Password visibility toggle ──
+  // Switches the password input between type="password" and type="text",
+  // and swaps the eye icon accordingly.
   toggleBtn.addEventListener('click', () => {
-    const show = pwdEl.type === 'password';
-    pwdEl.type = show ? 'text' : 'password';
-    eyeShow.style.display = show ? 'none'  : 'block';
-    eyeHide.style.display = show ? 'block' : 'none';
+    const show = pwdEl.type === 'password';          // true when currently hidden
+    pwdEl.type = show ? 'text' : 'password';         // toggle visibility
+    eyeShow.style.display = show ? 'none'  : 'block'; // hide "open eye" when visible
+    eyeHide.style.display = show ? 'block' : 'none';  // show "closed eye" when visible
   });
 
+  // ── Helper functions for feedback messages ──
+  /** Display an error banner with message m and hide the success banner. */
   const showErr  = (m) => { errMsg.textContent=m; errMsg.style.display='block'; okMsg.style.display='none'; };
+  /** Display a success banner with message m and hide the error banner. */
   const showOk   = (m) => { okMsg.textContent=m;  okMsg.style.display='block'; errMsg.style.display='none'; };
+  /** Hide both feedback banners. */
   const clearMsg = ()  => { errMsg.style.display=okMsg.style.display='none'; };
+  /** Basic email format check using a regex (RFC 5322 simplified). */
   const validEmail = (s) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s);
 
+  // ── Form submit handler ──
+  // Validates inputs in order, then simulates an async login request.
   form.addEventListener('submit', (e) => {
-    e.preventDefault(); clearMsg();
-    const email = emailEl.value.trim();
-    const pass  = pwdEl.value;
+    e.preventDefault(); // Prevent native form submission / page reload
+    clearMsg();         // Clear any previous feedback
+
+    const email = emailEl.value.trim(); // Trimmed email value
+    const pass  = pwdEl.value;          // Raw password (do not trim passwords)
+
+    // ── Validation guards ──
     if (!email)             { showErr('Please enter your email address.');        emailEl.focus(); return; }
     if (!validEmail(email)) { showErr('Please enter a valid email address.');     emailEl.focus(); return; }
     if (!pass)              { showErr('Please enter your password.');             pwdEl.focus();   return; }
     if (pass.length < 6)   { showErr('Password must be at least 6 characters.'); pwdEl.focus();   return; }
-    loginBtn.classList.add('loading'); loginBtn.disabled=true;
+
+    // ── Simulate async request: activate loading state on the button ──
+    loginBtn.classList.add('loading'); // Hides btn-text, shows spinner (via CSS)
+    loginBtn.disabled = true;          // Prevent double-submission
+
+    // Simulate a 1.4-second network delay, then check credentials
     setTimeout(() => {
-      loginBtn.classList.remove('loading'); loginBtn.disabled=false;
-      if (email===VALID_EMAIL && pass===VALID_PASS) {
-        showOk('&#10003; Login successful! Redirecting&#8230;'); form.reset();
+      loginBtn.classList.remove('loading'); // Restore button to normal state
+      loginBtn.disabled = false;
+
+      if (email === VALID_EMAIL && pass === VALID_PASS) {
+        // ── Success path: show confirmation and reset the form ──
+        showOk('&#10003; Login successful! Redirecting&#8230;');
+        form.reset();
       } else {
-        showErr('Invalid email or password. Please try again.'); pwdEl.value=''; pwdEl.focus();
+        // ── Failure path: show error, clear password, refocus ──
+        showErr('Invalid email or password. Please try again.');
+        pwdEl.value = '';
+        pwdEl.focus();
       }
     }, 1400);
   });
 
+  // ── Clear feedback messages whenever the user edits email or password ──
   [emailEl, pwdEl].forEach(el => el.addEventListener('input', clearMsg));
 </script>
 
