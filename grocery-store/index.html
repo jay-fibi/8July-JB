@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="FreshCart delivers fresh groceries and everyday essentials to your door.">
+  <title>FreshCart | Fresh Groceries, Delivered</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <a class="brand" href="#home"><span class="brand-mark">🌿</span><span>Fresh<em>Cart</em></span></a>
+      <button class="menu-toggle icon-button" type="button" aria-label="Open navigation" aria-expanded="false">☰</button>
+      <nav class="main-nav" aria-label="Main navigation"><a href="#home">Home</a><a href="#categories">Categories</a><a href="#products">Shop</a><a href="#about">About</a></nav>
+      <div class="header-actions">
+        <button class="theme-toggle icon-button" type="button" aria-label="Switch to dark theme">🌙</button>
+        <button class="cart-button" type="button" aria-label="Open shopping cart">🛒 <span class="cart-label">Cart</span><span class="cart-count" aria-live="polite">0</span></button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" id="home">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <span class="eyebrow">Fresh from local farms</span>
+          <h1>Good food starts with <em>fresh ingredients.</em></h1>
+          <p>Shop farm-fresh produce, pantry staples, and daily essentials—all carefully selected and delivered right to your door.</p>
+          <div class="hero-actions"><a class="button primary" href="#products">Shop groceries →</a><a class="button secondary" href="#categories">Browse categories</a></div>
+          <div class="benefits"><span>✓ Free delivery over $50</span><span>✓ 100% fresh guarantee</span></div>
+        </div>
+        <div class="hero-visual" aria-label="Basket of fresh groceries">
+          <div class="organic"><strong>100%</strong><small>Organic</small></div>
+          <span class="produce p1">🍅</span><span class="produce p2">🥕</span><span class="produce p3">🥦</span><span class="produce p4">🍊</span><span class="basket">🧺</span>
+          <div class="delivery">🚚 <span><strong>Fast delivery</strong><small>At your door today</small></span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="categories">
+      <div class="container">
+        <div class="section-heading"><div><span class="eyebrow">Shop your way</span><h2>Browse categories</h2></div><a href="#products">View all products →</a></div>
+        <div class="category-grid">
+          <button class="category-card active" data-category="all"><span>🛍️</span><strong>All products</strong><small>8 items</small></button>
+          <button class="category-card" data-category="fruit"><span>🍎</span><strong>Fresh fruits</strong><small>2 items</small></button>
+          <button class="category-card" data-category="vegetable"><span>🥬</span><strong>Vegetables</strong><small>2 items</small></button>
+          <button class="category-card" data-category="dairy"><span>🥛</span><strong>Dairy & eggs</strong><small>2 items</small></button>
+          <button class="category-card" data-category="bakery"><span>🥖</span><strong>Fresh bakery</strong><small>2 items</small></button>
+        </div>
+      </div>
+    </section>
+
+    <section class="section products-section" id="products">
+      <div class="container">
+        <div class="section-heading"><div><span class="eyebrow">Picked for you</span><h2>Popular products</h2></div><p>Fresh picks at honest prices</p></div>
+        <div class="product-grid">
+          <article class="product-card" data-category="fruit"><b class="badge">Organic</b><div class="product-image">🍎</div><div class="product-info"><small>Fresh fruits</small><h3>Organic Red Apples</h3><div class="rating">★★★★★ <span>4.8</span></div><div class="product-bottom"><div><strong>$3.49</strong> / lb</div><button class="add-button" data-name="Organic Red Apples" data-price="3.49" aria-label="Add apples">+</button></div></div></article>
+          <article class="product-card" data-category="fruit"><b class="badge sale">-15%</b><div class="product-image">🍌</div><div class="product-info"><small>Fresh fruits</small><h3>Sweet Bananas</h3><div class="rating">★★★★★ <span>4.7</span></div><div class="product-bottom"><div><strong>$1.29</strong> / bunch</div><button class="add-button" data-name="Sweet Bananas" data-price="1.29" aria-label="Add bananas">+</button></div></div></article>
+          <article class="product-card" data-category="vegetable"><b class="badge">Local</b><div class="product-image">🥦</div><div class="product-info"><small>Vegetables</small><h3>Fresh Broccoli</h3><div class="rating">★★★★★ <span>4.9</span></div><div class="product-bottom"><div><strong>$2.79</strong> / each</div><button class="add-button" data-name="Fresh Broccoli" data-price="2.79" aria-label="Add broccoli">+</button></div></div></article>
+          <article class="product-card" data-category="vegetable"><div class="product-image">🥕</div><div class="product-info"><small>Vegetables</small><h3>Crunchy Carrots</h3><div class="rating">★★★★★ <span>4.6</span></div><div class="product-bottom"><div><strong>$1.99</strong> / bag</div><button class="add-button" data-name="Crunchy Carrots" data-price="1.99" aria-label="Add carrots">+</button></div></div></article>
+          <article class="product-card" data-category="dairy"><b class="badge">Farm fresh</b><div class="product-image">🥛</div><div class="product-info"><small>Dairy & eggs</small><h3>Whole Milk</h3><div class="rating">★★★★★ <span>4.8</span></div><div class="product-bottom"><div><strong>$3.89</strong> / gallon</div><button class="add-button" data-name="Whole Milk" data-price="3.89" aria-label="Add milk">+</button></div></div></article>
+          <article class="product-card" data-category="dairy"><div class="product-image">🥚</div><div class="product-info"><small>Dairy & eggs</small><h3>Free-Range Eggs</h3><div class="rating">★★★★★ <span>4.9</span></div><div class="product-bottom"><div><strong>$4.49</strong> / dozen</div><button class="add-button" data-name="Free-Range Eggs" data-price="4.49" aria-label="Add eggs">+</button></div></div></article>
+          <article class="product-card" data-category="bakery"><b class="badge sale">Popular</b><div class="product-image">🥖</div><div class="product-info"><small>Fresh bakery</small><h3>Artisan Baguette</h3><div class="rating">★★★★★ <span>4.7</span></div><div class="product-bottom"><div><strong>$2.99</strong> / loaf</div><button class="add-button" data-name="Artisan Baguette" data-price="2.99" aria-label="Add baguette">+</button></div></div></article>
+          <article class="product-card" data-category="bakery"><div class="product-image">🥐</div><div class="product-info"><small>Fresh bakery</small><h3>Butter Croissants</h3><div class="rating">★★★★★ <span>4.8</span></div><div class="product-bottom"><div><strong>$5.49</strong> / pack</div><button class="add-button" data-name="Butter Croissants" data-price="5.49" aria-label="Add croissants">+</button></div></div></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="about"><div class="container promo"><div><span class="eyebrow">Freshness delivered</span><h2>Your weekly shop, made simple.</h2><p>Save time without compromising on quality. We source thoughtfully and deliver seven days a week.</p><a class="button light" href="#products">Start shopping</a></div><div class="promo-features"><div>🌱 <span><strong>Responsibly sourced</strong><small>Better food from trusted growers</small></span></div><div>⏱️ <span><strong>Same-day delivery</strong><small>Order before 2 PM</small></span></div><div>💚 <span><strong>Freshness guaranteed</strong><small>Love it or get your money back</small></span></div></div></div></section>
+  </main>
+
+  <footer><div class="container footer-grid"><div><a class="brand" href="#home"><span class="brand-mark">🌿</span><span>Fresh<em>Cart</em></span></a><p>Fresh groceries, thoughtful choices, and dependable delivery for every home.</p></div><div><strong>Shop</strong><a href="#products">All products</a><a href="#categories">Categories</a><a href="#products">Weekly specials</a></div><div><strong>Help</strong><a href="#about">About us</a><a href="mailto:hello@freshcart.example">Contact</a><a href="#home">Delivery info</a></div><div><strong>Stay in the loop</strong><p>Get fresh offers in your inbox.</p><form class="newsletter-form"><label class="sr-only" for="email">Email</label><input id="email" type="email" placeholder="Email address" required><button>→</button></form></div></div><div class="container footer-bottom"><span>© <span id="year"></span> FreshCart. All rights reserved.</span><span>Made fresh every day 🌱</span></div></footer>
+
+  <aside class="cart-drawer" aria-hidden="true" aria-label="Shopping cart"><div class="cart-header"><div><small>Your basket</small><h2>Shopping cart</h2></div><button class="cart-close icon-button" aria-label="Close cart">×</button></div><div class="cart-items"><div class="cart-empty"><span>🧺</span><h3>Your cart is empty</h3><p>Add some fresh favorites to get started.</p></div></div><div class="cart-summary"><div><span>Subtotal</span><strong class="cart-total">$0.00</strong></div><button class="button primary checkout-button">Checkout</button><small>Taxes and delivery calculated at checkout</small></div></aside>
+  <div class="overlay" hidden></div><div class="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
