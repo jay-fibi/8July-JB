@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="color-scheme" content="dark" />
+  <title>Hello there grocery — Home</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      min-height: 100vh;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background:
+        radial-gradient(ellipse at 15% 0%, rgba(20, 184, 166, 0.12) 0%, transparent 45%),
+        radial-gradient(ellipse at 90% 20%, rgba(56, 189, 248, 0.1) 0%, transparent 40%),
+        #0b0f14;
+      color: #e8edf2;
+    }
+    a { color: #2dd4bf; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.9rem 1.25rem;
+      background: rgba(15, 20, 27, 0.92);
+      border-bottom: 1px solid #243041;
+      backdrop-filter: blur(10px);
+    }
+    .brand {
+      font-weight: 700;
+      color: #2dd4bf;
+      font-size: 1.05rem;
+      white-space: nowrap;
+    }
+    .brand span { color: #8b9bb0; font-weight: 500; font-size: 0.75rem; display: block; }
+    .top-actions { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; justify-content: flex-end; }
+    .user-chip {
+      color: #c5d0de;
+      font-size: 0.9rem;
+      margin-right: 0.25rem;
+    }
+    .btn {
+      border: none;
+      border-radius: 10px;
+      padding: 0.55rem 0.9rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.15s, transform 0.1s, background 0.15s, border-color 0.15s;
+    }
+    .btn:active { transform: scale(0.98); }
+    .btn-primary {
+      color: #042f2e;
+      background: linear-gradient(135deg, #2dd4bf 0%, #38bdf8 100%);
+    }
+    .btn-primary:hover { opacity: 0.93; }
+    .btn-primary:disabled { opacity: 0.55; cursor: not-allowed; }
+    .btn-ghost {
+      color: #2dd4bf;
+      background: transparent;
+      border: 1.5px solid #2a3648;
+    }
+    .btn-ghost:hover { border-color: #14b8a6; background: rgba(20,184,166,0.08); }
+    .btn-danger {
+      color: #fca5a5;
+      background: transparent;
+      border: 1.5px solid #4a2a2a;
+    }
+    .btn-danger:hover { background: rgba(239,68,68,0.1); }
+    .cart-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 1.25rem;
+      height: 1.25rem;
+      margin-left: 0.35rem;
+      padding: 0 0.35rem;
+      border-radius: 999px;
+      background: #0f766e;
+      color: #ecfeff;
+      font-size: 0.75rem;
+    }
+
+    .layout {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1.25rem;
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      gap: 1.25rem;
+      align-items: start;
+    }
+    @media (max-width: 900px) {
+      .layout { grid-template-columns: 1fr; }
+      .cart-panel { position: static !important; }
+    }
+
+    .hero {
+      grid-column: 1 / -1;
+      background: #141a22;
+      border: 1px solid #243041;
+      border-radius: 16px;
+      padding: 1.25rem 1.5rem;
+    }
+    .hero h1 { font-size: 1.5rem; color: #f1f5f9; margin-bottom: 0.35rem; }
+    .hero p { color: #8b9bb0; font-size: 0.95rem; }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+      align-items: center;
+    }
+    .chip {
+      border: 1px solid #2a3648;
+      background: #111820;
+      color: #c5d0de;
+      border-radius: 999px;
+      padding: 0.4rem 0.85rem;
+      font-size: 0.85rem;
+      cursor: pointer;
+    }
+    .chip.active, .chip:hover {
+      border-color: #14b8a6;
+      color: #5eead4;
+      background: rgba(20,184,166,0.1);
+    }
+    .search {
+      flex: 1;
+      min-width: 160px;
+      padding: 0.55rem 0.85rem;
+      border-radius: 10px;
+      border: 1.5px solid #2a3648;
+      background: #0f141b;
+      color: #e8edf2;
+      font-size: 0.95rem;
+      outline: none;
+    }
+    .search:focus { border-color: #14b8a6; box-shadow: 0 0 0 3px rgba(20,184,166,0.15); }
+
+    .products {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+      gap: 0.85rem;
+    }
+    .product {
+      background: #141a22;
+      border: 1px solid #243041;
+      border-radius: 14px;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+    }
+    .product .emoji { font-size: 2rem; line-height: 1; }
+    .product h3 { font-size: 0.98rem; color: #f1f5f9; }
+    .product .desc { font-size: 0.78rem; color: #8b9bb0; flex: 1; min-height: 2.2em; }
+    .product .meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      margin-top: 0.25rem;
+    }
+    .price { font-weight: 700; color: #5eead4; }
+    .cat-tag {
+      font-size: 0.7rem;
+      color: #8b9bb0;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .qty-row { display: flex; align-items: center; gap: 0.4rem; }
+    .qty-row input {
+      width: 3rem;
+      text-align: center;
+      padding: 0.35rem;
+      border-radius: 8px;
+      border: 1px solid #2a3648;
+      background: #0f141b;
+      color: #e8edf2;
+    }
+    .product .btn { width: 100%; margin-top: 0.35rem; }
+
+    .cart-panel {
+      position: sticky;
+      top: 4.5rem;
+      background: #141a22;
+      border: 1px solid #243041;
+      border-radius: 16px;
+      padding: 1rem;
+    }
+    .cart-panel h2 {
+      font-size: 1.1rem;
+      margin-bottom: 0.85rem;
+      color: #f1f5f9;
+    }
+    .cart-empty { color: #8b9bb0; font-size: 0.9rem; padding: 0.5rem 0 1rem; }
+    .cart-item {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 0.25rem 0.5rem;
+      padding: 0.65rem 0;
+      border-bottom: 1px solid #1e2836;
+      font-size: 0.9rem;
+    }
+    .cart-item .name { font-weight: 600; color: #e8edf2; }
+    .cart-item .sub { color: #8b9bb0; font-size: 0.8rem; }
+    .cart-item .line { font-weight: 600; color: #5eead4; text-align: right; }
+    .cart-item .rm {
+      grid-column: 2;
+      justify-self: end;
+      background: none;
+      border: none;
+      color: #fca5a5;
+      cursor: pointer;
+      font-size: 0.78rem;
+    }
+    .cart-total {
+      display: flex;
+      justify-content: space-between;
+      margin: 0.9rem 0;
+      font-size: 1.05rem;
+      font-weight: 700;
+    }
+    .notes {
+      width: 100%;
+      min-height: 64px;
+      margin-bottom: 0.75rem;
+      padding: 0.6rem 0.75rem;
+      border-radius: 10px;
+      border: 1.5px solid #2a3648;
+      background: #0f141b;
+      color: #e8edf2;
+      resize: vertical;
+      font: inherit;
+    }
+    .notes:focus { outline: none; border-color: #14b8a6; }
+    .flash {
+      display: none;
+      margin: 0.6rem 0;
+      padding: 0.65rem 0.75rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      text-align: center;
+    }
+    .flash.show { display: block; }
+    .flash.ok {
+      background: rgba(16,185,129,0.12);
+      color: #6ee7b7;
+      border: 1px solid rgba(52,211,153,0.35);
+    }
+    .flash.err {
+      background: rgba(239,68,68,0.12);
+      color: #fca5a5;
+      border: 1px solid rgba(248,113,113,0.35);
+    }
+
+    .orders-section {
+      grid-column: 1 / -1;
+      background: #141a22;
+      border: 1px solid #243041;
+      border-radius: 16px;
+      padding: 1.25rem;
+      margin-bottom: 2rem;
+    }
+    .orders-section h2 { font-size: 1.15rem; margin-bottom: 1rem; color: #f1f5f9; }
+    .order-card {
+      border: 1px solid #243041;
+      border-radius: 12px;
+      padding: 0.9rem 1rem;
+      margin-bottom: 0.75rem;
+      background: #0f141b;
+    }
+    .order-head {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+    .order-head strong { color: #5eead4; }
+    .status {
+      display: inline-block;
+      padding: 0.15rem 0.55rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: capitalize;
+      background: rgba(45,212,191,0.15);
+      color: #5eead4;
+    }
+    .order-items { color: #8b9bb0; font-size: 0.88rem; line-height: 1.45; }
+    .muted { color: #8b9bb0; font-size: 0.9rem; }
+    .footer-note {
+      grid-column: 1 / -1;
+      text-align: center;
+      color: #4a5568;
+      font-size: 0.8rem;
+      padding-bottom: 1.5rem;
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">Hello there grocery<span>Fresh • Local • Friendly</span></div>
+    <div class="top-actions">
+      <span class="user-chip" id="userChip">Signed in</span>
+      <button type="button" class="btn btn-ghost" id="ordersBtn">My orders</button>
+      <button type="button" class="btn btn-primary" id="cartJumpBtn">
+        Cart<span class="cart-badge" id="cartCount">0</span>
+      </button>
+      <button type="button" class="btn btn-danger" id="logoutBtn" onclick="doLogout()">Sign out</button>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section class="hero">
+      <h1 id="greeting">Welcome back</h1>
+      <p>Browse fresh groceries, add items to your cart, and place an order — saved to your account.</p>
+    </section>
+
+    <section>
+      <div class="toolbar">
+        <input class="search" id="searchInput" type="search" placeholder="Search products…" />
+        <div id="categoryChips"></div>
+      </div>
+      <div class="products" id="productGrid"></div>
+      <p class="muted" id="emptyProducts" style="display:none;margin-top:1rem;">No products match your filters.</p>
+    </section>
+
+    <aside class="cart-panel" id="cartPanel">
+      <h2>Your cart</h2>
+      <div id="cartItems"></div>
+      <div class="cart-total"><span>Total</span><span id="cartTotal">$0.00</span></div>
+      <label class="muted" for="orderNotes" style="display:block;margin-bottom:0.35rem;">Order notes (optional)</label>
+      <textarea class="notes" id="orderNotes" placeholder="Delivery instructions, substitutions…"></textarea>
+      <div class="flash" id="cartFlash" role="status"></div>
+      <button type="button" class="btn btn-primary" id="placeOrderBtn" style="width:100%;" disabled>Place order</button>
+      <button type="button" class="btn btn-ghost" id="clearCartBtn" style="width:100%;margin-top:0.5rem;">Clear cart</button>
+    </aside>
+
+    <section class="orders-section" id="ordersSection">
+      <h2>Order history</h2>
+      <div id="ordersList"><p class="muted">Loading orders…</p></div>
+    </section>
+
+    <p class="footer-note">© 2026 Hello there grocery</p>
+  </main>
+
+  <script>
+    const API_BASE =
+      window.location.protocol.startsWith("http") && window.location.port === "8000"
+        ? ""
+        : "http://127.0.0.1:8000";
+
+    let currentUser = null;
+    let products = [];
+    let categories = [];
+    let activeCategory = "All";
+    let cart = {}; // productId -> qty
+
+    function money(n) {
+      return "$" + Number(n).toFixed(2);
+    }
+
+    function requireAuth() {
+      try {
+        currentUser = JSON.parse(sessionStorage.getItem("groceryUser") || "null");
+      } catch (_) {
+        currentUser = null;
+      }
+      if (!currentUser || !currentUser.id) {
+        window.location.replace("login.html");
+        return false;
+      }
+      return true;
+    }
+
+    function loadCart() {
+      try {
+        const raw = localStorage.getItem("groceryCart_" + currentUser.id);
+        cart = raw ? JSON.parse(raw) : {};
+        if (!cart || typeof cart !== "object") cart = {};
+      } catch (_) {
+        cart = {};
+      }
+    }
+
+    function saveCart() {
+      try {
+        localStorage.setItem("groceryCart_" + currentUser.id, JSON.stringify(cart));
+      } catch (_) {}
+    }
+
+    function cartCount() {
+      return Object.values(cart).reduce((s, q) => s + Number(q || 0), 0);
+    }
+
+    function cartTotal() {
+      let t = 0;
+      for (const [id, qty] of Object.entries(cart)) {
+        const p = products.find((x) => String(x.id) === String(id));
+        if (p) t += p.price * qty;
+      }
+      return t;
+    }
+
+    function showFlash(el, text, ok) {
+      el.textContent = text;
+      el.className = "flash show " + (ok ? "ok" : "err");
+      if (ok) {
+        setTimeout(() => {
+          el.className = "flash";
+          el.textContent = "";
+        }, 3500);
+      }
+    }
+
+    async function readApi(res) {
+      const text = await res.text();
+      try {
+        return JSON.parse(text || "{}");
+      } catch (_) {
+        return {
+          ok: false,
+          error:
+            "Invalid server response. Open http://127.0.0.1:8000/home.html with python server.py running.",
+        };
+      }
+    }
+
+    async function fetchProducts() {
+      const res = await fetch(API_BASE + "/api/products");
+      const data = await readApi(res);
+      if (!res.ok || !data.ok) throw new Error(data.error || "Failed to load products");
+      products = data.products || [];
+      categories = data.categories || [];
+    }
+
+    async function fetchOrders() {
+      const res = await fetch(API_BASE + "/api/orders?user_id=" + encodeURIComponent(currentUser.id));
+      const data = await readApi(res);
+      if (!res.ok || !data.ok) {
+        document.getElementById("ordersList").innerHTML =
+          '<p class="muted">' + (data.error || "Could not load orders.") + "</p>";
+        return;
+      }
+      renderOrders(data.orders || []);
+    }
+
+    function filteredProducts() {
+      const q = (document.getElementById("searchInput").value || "").trim().toLowerCase();
+      return products.filter((p) => {
+        const catOk = activeCategory === "All" || p.category === activeCategory;
+        const qOk =
+          !q ||
+          p.name.toLowerCase().includes(q) ||
+          (p.description || "").toLowerCase().includes(q) ||
+          p.category.toLowerCase().includes(q);
+        return catOk && qOk;
+      });
+    }
+
+    function renderCategories() {
+      const wrap = document.getElementById("categoryChips");
+      const cats = ["All"].concat(categories);
+      wrap.innerHTML = cats
+        .map(
+          (c) =>
+            '<button type="button" class="chip' +
+            (c === activeCategory ? " active" : "") +
+            '" data-cat="' +
+            c +
+            '">' +
+            c +
+            "</button>"
+        )
+        .join("");
+      wrap.querySelectorAll(".chip").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          activeCategory = btn.getAttribute("data-cat");
+          renderCategories();
+          renderProducts();
+        });
+      });
+    }
+
+    function renderProducts() {
+      const list = filteredProducts();
+      const grid = document.getElementById("productGrid");
+      const empty = document.getElementById("emptyProducts");
+      empty.style.display = list.length ? "none" : "block";
+      grid.innerHTML = list
+        .map(
+          (p) =>
+            '<article class="product" data-id="' +
+            p.id +
+            '">' +
+            '<div class="emoji">' +
+            (p.emoji || "🛒") +
+            "</div>" +
+            '<div class="cat-tag">' +
+            p.category +
+            "</div>" +
+            "<h3>" +
+            escapeHtml(p.name) +
+            "</h3>" +
+            '<p class="desc">' +
+            escapeHtml(p.description || "") +
+            "</p>" +
+            '<div class="meta"><span class="price">' +
+            money(p.price) +
+            '</span></div>' +
+            '<div class="qty-row">' +
+            '<label class="muted" for="qty-' +
+            p.id +
+            '">Qty</label>' +
+            '<input id="qty-' +
+            p.id +
+            '" type="number" min="1" max="99" value="1" />' +
+            "</div>" +
+            '<button type="button" class="btn btn-primary add-btn">Add to cart</button>' +
+            "</article>"
+        )
+        .join("");
+
+      grid.querySelectorAll(".product").forEach((card) => {
+        const id = card.getAttribute("data-id");
+        card.querySelector(".add-btn").addEventListener("click", () => {
+          const input = card.querySelector('input[type="number"]');
+          let qty = parseInt(input.value, 10);
+          if (!Number.isFinite(qty) || qty < 1) qty = 1;
+          if (qty > 99) qty = 99;
+          cart[id] = (cart[id] || 0) + qty;
+          saveCart();
+          renderCart();
+          showFlash(document.getElementById("cartFlash"), "Added to cart.", true);
+        });
+      });
+    }
+
+    function renderCart() {
+      const box = document.getElementById("cartItems");
+      const ids = Object.keys(cart).filter((id) => cart[id] > 0);
+      document.getElementById("cartCount").textContent = String(cartCount());
+      document.getElementById("cartTotal").textContent = money(cartTotal());
+      document.getElementById("placeOrderBtn").disabled = ids.length === 0;
+
+      if (!ids.length) {
+        box.innerHTML = '<p class="cart-empty">Your cart is empty. Add some fresh finds!</p>';
+        return;
+      }
+
+      box.innerHTML = ids
+        .map((id) => {
+          const p = products.find((x) => String(x.id) === String(id));
+          if (!p) return "";
+          const qty = cart[id];
+          return (
+            '<div class="cart-item" data-id="' +
+            id +
+            '">' +
+            '<div><div class="name">' +
+            (p.emoji || "") +
+            " " +
+            escapeHtml(p.name) +
+            '</div><div class="sub">' +
+            money(p.price) +
+            " × " +
+            qty +
+            '</div></div>' +
+            '<div class="line">' +
+            money(p.price * qty) +
+            "</div>" +
+            '<button type="button" class="rm">Remove</button>' +
+            "</div>"
+          );
+        })
+        .join("");
+
+      box.querySelectorAll(".rm").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const id = btn.closest(".cart-item").getAttribute("data-id");
+          delete cart[id];
+          saveCart();
+          renderCart();
+        });
+      });
+    }
+
+    function renderOrders(orders) {
+      const el = document.getElementById("ordersList");
+      if (!orders.length) {
+        el.innerHTML = '<p class="muted">No orders yet. Place your first order from the cart!</p>';
+        return;
+      }
+      el.innerHTML = orders
+        .map(function (o) {
+          const items = (o.items || [])
+            .map(function (i) {
+              return (
+                escapeHtml(i.product_name) +
+                " × " +
+                i.quantity +
+                " (" +
+                money(i.line_total) +
+                ")"
+              );
+            })
+            .join(" · ");
+
+          let notesHtml = "";
+          if (o.notes) {
+            notesHtml =
+              '<div class="muted" style="margin-top:0.4rem;">Note: ' +
+              escapeHtml(o.notes) +
+              "</div>";
+          }
+
+          return (
+            '<div class="order-card">' +
+            '<div class="order-head">' +
+            "<div>" +
+            "<strong>Order #" +
+            o.id +
+            "</strong> " +
+            '<span class="status">' +
+            escapeHtml(o.status) +
+            "</span>" +
+            '<div class="muted">' +
+            escapeHtml(o.created_at || "") +
+            "</div>" +
+            "</div>" +
+            "<div><strong>" +
+            money(o.total) +
+            "</strong></div>" +
+            "</div>" +
+            '<div class="order-items">' +
+            items +
+            "</div>" +
+            notesHtml +
+            "</div>"
+          );
+        })
+        .join("");
+    }
+
+    function escapeHtml(s) {
+      return String(s)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    function doLogout() {
+      try {
+        sessionStorage.removeItem("groceryUser");
+      } catch (e) {}
+      window.location.replace("login.html");
+    }
+    window.doLogout = doLogout;
+
+    async function placeOrder() {
+      const btn = document.getElementById("placeOrderBtn");
+      const flash = document.getElementById("cartFlash");
+      const items = Object.entries(cart)
+        .filter(function (entry) {
+          return entry[1] > 0;
+        })
+        .map(function (entry) {
+          return {
+            product_id: Number(entry[0]),
+            quantity: Number(entry[1]),
+          };
+        });
+
+      if (!items.length) {
+        showFlash(flash, "Your cart is empty.", false);
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = "Placing order…";
+      try {
+        const res = await fetch(API_BASE + "/api/orders", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            user_id: currentUser.id,
+            items: items,
+            notes: document.getElementById("orderNotes").value.trim(),
+          }),
+        });
+        const data = await readApi(res);
+        if (!res.ok || !data.ok) {
+          showFlash(flash, data.error || "Could not place order.", false);
+          return;
+        }
+        cart = {};
+        saveCart();
+        document.getElementById("orderNotes").value = "";
+        renderCart();
+        showFlash(
+          flash,
+          "Order #" + data.order.id + " placed! Total " + money(data.order.total),
+          true
+        );
+        await fetchOrders();
+        document.getElementById("ordersSection").scrollIntoView({ behavior: "smooth" });
+      } catch (err) {
+        showFlash(flash, "Cannot reach server. Run: python server.py", false);
+      } finally {
+        btn.textContent = "Place order";
+        btn.disabled = cartCount() === 0;
+      }
+    }
+
+    async function init() {
+      if (!requireAuth()) return;
+
+      // Bind logout immediately so it works even if product load fails
+      const logoutBtn = document.getElementById("logoutBtn");
+      if (logoutBtn) {
+        logoutBtn.addEventListener("click", function (e) {
+          e.preventDefault();
+          doLogout();
+        });
+      }
+
+      document.getElementById("userChip").textContent =
+        currentUser.name + " · " + currentUser.email;
+      document.getElementById("greeting").textContent =
+        "Welcome, " + currentUser.name + "!";
+
+      document.getElementById("ordersBtn").addEventListener("click", function () {
+        document.getElementById("ordersSection").scrollIntoView({ behavior: "smooth" });
+      });
+      document.getElementById("cartJumpBtn").addEventListener("click", function () {
+        document.getElementById("cartPanel").scrollIntoView({ behavior: "smooth" });
+      });
+      document.getElementById("clearCartBtn").addEventListener("click", function () {
+        cart = {};
+        saveCart();
+        renderCart();
+      });
+      document.getElementById("placeOrderBtn").addEventListener("click", placeOrder);
+      document.getElementById("searchInput").addEventListener("input", renderProducts);
+
+      loadCart();
+
+      try {
+        await fetchProducts();
+        renderCategories();
+        renderProducts();
+        renderCart();
+        await fetchOrders();
+      } catch (err) {
+        console.error(err);
+        document.getElementById("productGrid").innerHTML =
+          '<p class="muted">Could not load store. Open http://127.0.0.1:8000/home.html and run: python server.py</p>';
+        document.getElementById("ordersList").innerHTML =
+          '<p class="muted">Orders unavailable until the server is running.</p>';
+      }
+    }
+
+    init();
+  </script>
+</body>
+</html>

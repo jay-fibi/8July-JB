@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="color-scheme" content="dark" />
+  <title>Hello there grocery — Login</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background:
+        radial-gradient(ellipse at 20% 20%, rgba(20, 184, 166, 0.15) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 80%, rgba(56, 189, 248, 0.12) 0%, transparent 50%),
+        #0b0f14;
+      color: #e8edf2;
+      padding: 1.5rem;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    .emoji-bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .emoji-bg span {
+      position: absolute;
+      font-size: 2.25rem;
+      opacity: 0.18;
+      user-select: none;
+      line-height: 1;
+      animation: float 8s ease-in-out infinite;
+    }
+
+    .emoji-bg span:nth-child(1)  { top: 8%;  left: 6%;  font-size: 2.5rem; animation-delay: 0s; }
+    .emoji-bg span:nth-child(2)  { top: 14%; right: 10%; font-size: 2rem;  animation-delay: 1.2s; }
+    .emoji-bg span:nth-child(3)  { top: 28%; left: 14%; font-size: 1.75rem; animation-delay: 0.6s; }
+    .emoji-bg span:nth-child(4)  { top: 22%; right: 22%; font-size: 2.25rem; animation-delay: 2s; }
+    .emoji-bg span:nth-child(5)  { top: 48%; left: 4%;  font-size: 2rem;  animation-delay: 1.5s; }
+    .emoji-bg span:nth-child(6)  { top: 55%; right: 7%; font-size: 2.5rem; animation-delay: 0.3s; }
+    .emoji-bg span:nth-child(7)  { top: 68%; left: 12%; font-size: 1.9rem; animation-delay: 2.4s; }
+    .emoji-bg span:nth-child(8)  { top: 72%; right: 16%; font-size: 2.1rem; animation-delay: 1s; }
+    .emoji-bg span:nth-child(9)  { top: 85%; left: 28%; font-size: 1.8rem; animation-delay: 1.8s; }
+    .emoji-bg span:nth-child(10) { top: 88%; right: 30%; font-size: 2.3rem; animation-delay: 0.9s; }
+    .emoji-bg span:nth-child(11) { top: 40%; left: 88%; font-size: 1.7rem; animation-delay: 2.1s; }
+    .emoji-bg span:nth-child(12) { top: 5%;  left: 45%; font-size: 2rem;  animation-delay: 1.4s; }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-12px) rotate(6deg); }
+    }
+
+    .page {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      position: relative;
+      z-index: 1;
+    }
+
+    .site-footer {
+      width: 100%;
+      max-width: 380px;
+      margin-top: 1.5rem;
+      padding: 1rem 0 0.25rem;
+      text-align: center;
+      font-size: 0.8rem;
+      color: #5c6b7e;
+      border-top: 1px solid #1e2836;
+      position: relative;
+      z-index: 1;
+    }
+
+    .site-footer a {
+      color: #8b9bb0;
+      text-decoration: none;
+      margin: 0 0.5rem;
+    }
+
+    .site-footer a:hover {
+      color: #2dd4bf;
+      text-decoration: underline;
+    }
+
+    .site-footer .links {
+      margin-bottom: 0.5rem;
+    }
+
+    .site-footer .copy {
+      color: #4a5568;
+    }
+
+    .login-card {
+      width: 100%;
+      max-width: 380px;
+      background: #141a22;
+      border: 1px solid #243041;
+      border-radius: 16px;
+      padding: 2.5rem 2rem;
+      box-shadow: 0 24px 64px rgba(0, 0, 0, 0.55);
+      position: relative;
+      z-index: 1;
+    }
+
+    .login-card h1 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin-bottom: 0.35rem;
+      text-align: center;
+      color: #f1f5f9;
+    }
+
+    .store-name {
+      font-size: 1.15rem;
+      font-weight: 700;
+      text-align: center;
+      letter-spacing: 0.02em;
+      color: #2dd4bf;
+      margin-bottom: 1.25rem;
+    }
+
+    .store-name span {
+      display: block;
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #8b9bb0;
+      margin-top: 0.25rem;
+    }
+
+    .login-card .subtitle {
+      text-align: center;
+      color: #8b9bb0;
+      font-size: 0.95rem;
+      margin-bottom: 2rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 600;
+      margin-bottom: 0.4rem;
+      color: #c5d0de;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      font-size: 1rem;
+      border: 1.5px solid #2a3648;
+      border-radius: 10px;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+      background: #0f141b;
+      color: #e8edf2;
+    }
+
+    .form-group input::placeholder {
+      color: #5c6b7e;
+    }
+
+    .form-group input:focus {
+      border-color: #14b8a6;
+      box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.2);
+      background: #111820;
+    }
+
+    .form-options {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+      font-size: 0.875rem;
+    }
+
+    .remember {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      color: #8b9bb0;
+      cursor: pointer;
+    }
+
+    .remember input {
+      width: 1rem;
+      height: 1rem;
+      accent-color: #14b8a6;
+      cursor: pointer;
+    }
+
+    .forgot {
+      color: #2dd4bf;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .forgot:hover {
+      text-decoration: underline;
+      color: #5eead4;
+    }
+
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-top: 0.25rem;
+    }
+
+    .btn-row > * {
+      flex: 1 1 0;
+      min-width: 0;
+    }
+
+    .btn-login {
+      width: 100%;
+      padding: 0.85rem 0.5rem;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #042f2e;
+      background: linear-gradient(135deg, #2dd4bf 0%, #38bdf8 100%);
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+      box-shadow: 0 8px 24px rgba(45, 212, 191, 0.2);
+    }
+
+    .btn-login:hover {
+      opacity: 0.95;
+      box-shadow: 0 10px 28px rgba(45, 212, 191, 0.3);
+    }
+
+    .btn-login:active {
+      transform: scale(0.98);
+    }
+
+    .btn-login:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn-refresh {
+      width: 100%;
+      margin-top: 0;
+      padding: 0.85rem 0.5rem;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #2dd4bf;
+      background: transparent;
+      border: 1.5px solid #2a3648;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s, color 0.2s, transform 0.15s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.35rem;
+    }
+
+    .btn-refresh:hover {
+      border-color: #14b8a6;
+      background: rgba(20, 184, 166, 0.08);
+      color: #5eead4;
+    }
+
+    .btn-refresh:active {
+      transform: scale(0.98);
+    }
+
+    .btn-refresh .icon {
+      display: inline-block;
+      font-size: 1.1rem;
+      line-height: 1;
+    }
+
+    .btn-signup {
+      width: 100%;
+      margin-top: 0;
+      padding: 0.85rem 0.5rem;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #2dd4bf;
+      background: transparent;
+      border: 1.5px solid #2a3648;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s, color 0.2s, transform 0.15s;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .btn-signup:hover {
+      border-color: #14b8a6;
+      background: rgba(20, 184, 166, 0.08);
+      color: #5eead4;
+    }
+
+    .btn-signup:active {
+      transform: scale(0.98);
+    }
+
+    #message {
+      display: none;
+      margin-top: 1rem;
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      font-size: 0.875rem;
+      text-align: center;
+    }
+
+    #message.success {
+      display: block;
+      background: rgba(16, 185, 129, 0.12);
+      color: #6ee7b7;
+      border: 1px solid rgba(52, 211, 153, 0.35);
+    }
+
+    #message.error {
+      display: block;
+      background: rgba(239, 68, 68, 0.12);
+      color: #fca5a5;
+      border: 1px solid rgba(248, 113, 113, 0.35);
+    }
+  </style>
+</head>
+<body>
+  <div class="emoji-bg" aria-hidden="true">
+    <span>🛒</span>
+    <span>🍎</span>
+    <span>🥦</span>
+    <span>🥖</span>
+    <span>🧀</span>
+    <span>🥛</span>
+    <span>🥕</span>
+    <span>🍊</span>
+    <span>🥑</span>
+    <span>🍇</span>
+    <span>🍅</span>
+    <span>🥬</span>
+  </div>
+
+  <div class="page">
+    <div class="login-card">
+      <p class="store-name">
+        Hello there grocery
+        <span>Fresh • Local • Friendly</span>
+      </p>
+      <h1>Welcome back</h1>
+      <p class="subtitle">Sign in to your account</p>
+
+      <form id="loginForm" novalidate>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            placeholder="you@example.com"
+            autocomplete="email"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            placeholder="Enter your password"
+            autocomplete="current-password"
+            required
+          />
+        </div>
+
+        <div class="form-options">
+          <label class="remember">
+            <input type="checkbox" name="remember" />
+            Remember me
+          </label>
+          <a href="#" class="forgot">Forgot password?</a>
+        </div>
+
+        <div class="btn-row">
+          <button type="submit" class="btn-login" id="signInBtn">Sign in</button>
+          <a href="signup.html" class="btn-signup" tabindex="0">Sign up</a>
+          <button type="button" class="btn-refresh" id="refreshBtn" aria-label="Refresh page">
+            <span class="icon" aria-hidden="true">↻</span>
+            Refresh
+          </button>
+        </div>
+      </form>
+
+      <div id="message" role="status"></div>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="links">
+      <a href="#">Privacy</a>
+      <a href="#">Terms</a>
+      <a href="#">Help</a>
+    </div>
+    <p class="copy">&copy; 2026 Hello there grocery. All rights reserved.</p>
+  </footer>
+
+  <script>
+    const form = document.getElementById("loginForm");
+    const message = document.getElementById("message");
+    const refreshBtn = document.getElementById("refreshBtn");
+    const signInBtn = document.getElementById("signInBtn");
+
+    const API_BASE =
+      window.location.protocol.startsWith("http") && window.location.port === "8000"
+        ? ""
+        : "http://127.0.0.1:8000";
+
+    function showMessage(text, type) {
+      message.textContent = text;
+      message.className = type;
+    }
+
+    function setLoading(isLoading) {
+      signInBtn.disabled = isLoading;
+      signInBtn.textContent = isLoading ? "Signing in…" : "Sign in";
+    }
+
+    async function readApiResponse(res) {
+      const text = await res.text();
+      if (!text) {
+        return {
+          ok: false,
+          error:
+            "Empty response from server (HTTP " +
+            res.status +
+            "). Open http://127.0.0.1:8000/login.html and ensure python server.py is running.",
+        };
+      }
+      try {
+        return JSON.parse(text);
+      } catch (_) {
+        return {
+          ok: false,
+          error:
+            "Invalid server response (HTTP " +
+            res.status +
+            "). Open http://127.0.0.1:8000/login.html — do not open the HTML file directly.",
+        };
+      }
+    }
+
+    refreshBtn.addEventListener("click", function () {
+      window.location.reload();
+    });
+
+    // Enter in form fields submits via Sign in (default action)
+    form.addEventListener("keydown", function (e) {
+      if (e.key !== "Enter") return;
+
+      const target = e.target;
+      if (
+        target === refreshBtn ||
+        target.closest(".btn-refresh") ||
+        target.closest(".btn-signup")
+      ) {
+        return;
+      }
+
+      e.preventDefault();
+      if (typeof form.requestSubmit === "function") {
+        form.requestSubmit(signInBtn);
+      } else {
+        signInBtn.click();
+      }
+    });
+
+    form.addEventListener("submit", async function (e) {
+      e.preventDefault();
+
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+
+      message.className = "";
+      message.textContent = "";
+
+      if (!email || !password) {
+        showMessage("Please fill in all fields.", "error");
+        return;
+      }
+
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        showMessage("Please enter a valid email address.", "error");
+        return;
+      }
+
+      setLoading(true);
+      try {
+        const res = await fetch(API_BASE + "/api/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password }),
+        });
+        const data = await readApiResponse(res);
+
+        if (!res.ok || !data.ok) {
+          showMessage(data.error || "Login failed.", "error");
+          return;
+        }
+
+        try {
+          sessionStorage.setItem(
+            "groceryUser",
+            JSON.stringify({
+              id: data.user.id,
+              name: data.user.name,
+              email: data.user.email,
+            })
+          );
+        } catch (_) {
+          /* ignore storage errors */
+        }
+
+        showMessage("Welcome back, " + data.user.name + "!", "success");
+        setTimeout(function () {
+          window.location.href = "home.html";
+        }, 800);
+      } catch (err) {
+        showMessage(
+          "Cannot reach server at http://127.0.0.1:8000. Run: python server.py",
+          "error"
+        );
+      } finally {
+        setLoading(false);
+      }
+    });
+  </script>
+</body>
+</html>
